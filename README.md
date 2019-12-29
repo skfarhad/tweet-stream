@@ -10,23 +10,39 @@ Tweets can be collected having specific keywords and hashtags.
 <br>Streaming can be stopped using <code>'/stream/stop'</code> API.
 <br>Status of streaming process can be monitored using <code>'/stream/status'</code>.
 
-<br>Collected topics can be browsed and analyzed later using the <code>'/tweets'</code> API.
+<br>Collected tweets can be browsed and analyzed later using the <code>'/tweets'</code> API.
 <br>Tweets can be filter with 'token' query param like this- <code>'/tweets?token=metoo'</code>.
-<br>Max number of tweets returned can be specified using 'count' query param like this- <code>'/tweets?count=10'</code>
+<br>Max number of tweets returned can be specified using 'count' query param 
+like this- <code>'/tweets?count=10'</code>
 
 ### Service Architecture:
-The API endpoints are implemented using Flask framework. It's hosted in AWS lambda.
-<br>There two more lambda functions for fetching tweets from twitter real-time api and pushing into AWS SQS.
-<br>Later, pushed messaged are extracted and stored in DynamoDB. Those functions are implemented in Python.
+The API endpoints are implemented using Flask framework. 
+It's hosted in AWS Lambda using zappa.
+<br>There are two more lambda functions. 
+<br>One fetches the tweets from twitter real-time api and pushes those into SQS Queue. 
+It's handler is located in <code>stream_service.py</code> file.
+<br>The other is used to extract SQS message from Queue and store in DynamoDB. It's details can be found in 
+<code>fetch_service.py</code> file.
+<br>Those functions are implemented in Python.
+
+<br>AWS CloudWatch Event trigger is being used to trigger stream start service every 5 minutes.
+<br>The function checks if the stream status is active or not. 
+If active then it keeps fetching the tweets for 240 secs.
+<br>Then another event is triggered and stream keeps going that way.
+
+<br>If the user sets the status to false then the stream is stopped.
+<br>The SQS event is used to trigger the function which store the tweets from SQS to DynamoDB. 
 
 ### Build Process
-To deploy the Flask app to AWS Lambda, [zappa](https://github.com/Miserlou/Zappa) was used. Deployment Process-
+To deploy the Flask app to AWS Lambda, [zappa](https://github.com/Miserlou/Zappa) was used. 
+Deployment Process-
 <p>
 <code>zappa init</code><br/>
 <code>zappa deploy dev</code>
 </p>
 
-To deploy the python functions in Lambda, [python-lambda](https://github.com/nficano/python-lambda) tool was used. Process-
+To deploy the python functions in Lambda, 
+[python-lambda](https://github.com/nficano/python-lambda) tool was used. Process-
 <p>
 <code>lambda init</code><br/>
 <code>lambda deploy-s3 --config-file stream_config.yaml
