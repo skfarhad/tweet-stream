@@ -21,13 +21,14 @@ The API endpoints are implemented using Flask framework. It's hosted in AWS lamb
 
 ### Build Process
 To deploy the Flask app to AWS Lambda, [zappa](https://github.com/Miserlou/Zappa) was used. Deployment Process-
-<br><code>
-<br>zappa init
-<br>zappa deploy dev
-</code>
+<p>
+<code>zappa init</code><br/>
+<code>zappa deploy dev</code>
+</p>
 
 To deploy the python functions in Lambda, [python-lambda](https://github.com/nficano/python-lambda) tool was used. Process-
-<br><code>
-<br>lambda init
-<br>lambda deploy-s3 --config-file stream_config.yaml
+<p>
+<code>lambda init</code><br/>
+<code>lambda deploy-s3 --config-file stream_config.yaml
 </code>
+</p>
