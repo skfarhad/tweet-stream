@@ -1,17 +1,18 @@
 # Tweet Streaming service
-Service URL: http://tweet.stream.skfarhad.com
+Service base endpoint: http://tweet.stream.skfarhad.com
 ### User Guide:
 The following API endpoints are provided for collecting and browsing Recent
 tweets.
 
 Tweets can be collected having specific keywords and hashtags.
-<br>Streaming process can be started using '/stream/start?token=aws%20lambda' API. 
-<br>This will collect tweets have the phrase 'aws lambda'. Streaming can be stopped using '/stream/stop' API.
-<br>Stream status can be monitored using '/stream/status'.
+<br>Streaming process can be started using <code>'/stream/start?token=aws%20lambda'</code> API. 
+<br>This request will start the stream process to collect the tweets with the phrase 'aws lambda'. 
+<br>Streaming can be stopped using <code>'/stream/stop'</code> API.
+<br>Status of streaming process can be monitored using <code>'/stream/status'</code>.
 
-<br>Collected topics can be browsed and analyzed later using the '/tweets' API.
-<br>Tweets can be filter with 'token' query param like this- '/tweets?token=metoo'.
-<br>Max number of tweets returned can be specified using 'count' query param like this- '/tweets?count=10'
+<br>Collected topics can be browsed and analyzed later using the <code>'/tweets'</code> API.
+<br>Tweets can be filter with 'token' query param like this- <code>'/tweets?token=metoo'</code>.
+<br>Max number of tweets returned can be specified using 'count' query param like this- <code>'/tweets?count=10'</code>
 
 ### Service Architecture:
 The API endpoints are implemented using Flask framework. It's hosted in AWS lambda.
