@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 import json
 import decimal
 from boto3.dynamodb.conditions import Key
-from app_apis.configs import FEED_TABLE, MANAGER_TABLE, TWITTER_API
+from backend.configs import TWEET_TABLE, MANAGER_TABLE, TWITTER_API
 
 utc = pytz.utc
 
@@ -55,9 +55,11 @@ def format_tpy_dict(dict_obj):
 
 
 def store_tpy_tweet_db(tweet):
-    FEED_TABLE.put_item(
-        Item=format_tpy_dict(tweet)
+    response = TWEET_TABLE.put_item(
+        Item=format_tpy_dict(tweet),
+        ReturnValues='ALL_OLD'
     )
+    return response
 
 
 def fetch_recent_tweets(token, count=10):
@@ -80,7 +82,7 @@ def fetch_recent_tweets(token, count=10):
 
 
 def store_tweet_db(tweet):
-    FEED_TABLE.put_item(
+    TWEET_TABLE.put_item(
         Item=format_ptw_dict(tweet)
     )
 
@@ -101,10 +103,37 @@ def set_run_status():
         Key={
             'manager_id': 1,
         },
-        UpdateExpression='SET stream_status = :val1, ts_start= :val2',
+        UpdateExpression=('SET stream_status = :val1, '
+                          'ts_start = :val2, cur_sqs_count = :val3, cur_insert_count = :val4'),
         ExpressionAttributeValues={
             ':val1': True,
-            ':val2': cur_ts
+            ':val2': cur_ts,
+            ':val3': 0,
+            ':val4': 0
+        }
+    )
+
+
+def set_sqs_count():
+    MANAGER_TABLE.update_item(
+        Key={
+            'manager_id': 1,
+        },
+        UpdateExpression='SET cur_sqs_count = cur_sqs_count + :val1,',
+        ExpressionAttributeValues={
+            ':val1': 1,
+        }
+    )
+
+
+def set_insert_count():
+    MANAGER_TABLE.update_item(
+        Key={
+            'manager_id': 1,
+        },
+        UpdateExpression='SET cur_insert_count = cur_insert_count + :val1,',
+        ExpressionAttributeValues={
+            ':val1': 1,
         }
     )
 

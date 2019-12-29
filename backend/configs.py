@@ -6,7 +6,7 @@ import twitter
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DDB = boto3.resource('dynamodb')
-FEED_TABLE = DDB.Table('twitter_feed')
+TWEET_TABLE = DDB.Table('twitter_feed')
 MANAGER_TABLE = DDB.Table('stream_manager')
 SQS = boto3.client('sqs')
 

@@ -1,0 +1,5 @@
+python-twitter
+tweepy
+python-lambda
+boto3
+pytz

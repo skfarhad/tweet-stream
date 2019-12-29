@@ -1,4 +1,6 @@
 env/
+env_fetch/
+env_stream/
 fetch_dist/
 stream_dist/
 .idea/
@@ -12,4 +14,5 @@ stream_dist/
 *.pem
 *.csv
 *.yaml
+*.zip
 log/

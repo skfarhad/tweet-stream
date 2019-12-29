@@ -1,11 +1,10 @@
 from datetime import datetime
 import pytz
-from boto3.dynamodb.conditions import Key, Attr
-from app_configs import SQS, SQS_QUEUE_URL
+from backend.configs import SQS, SQS_QUEUE_URL
 utc = pytz.utc
 
 
-def send_message(msg_str, count, object_id):
+def send_message(msg_str, object_id, count=0):
     cur_ts = str(utc.localize(datetime.now()))
     response = SQS.send_message(
         QueueUrl=SQS_QUEUE_URL,

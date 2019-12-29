@@ -4,8 +4,10 @@ from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 
-from app_configs import CONFIG
-from app_helpers import get_stream_status, set_stop_status, store_tpy_tweet_db
+from backend.configs import CONFIG
+from backend.helpers import get_stream_status, \
+    set_stop_status, format_tpy_dict, set_sqs_count
+from stream_utils import send_message
 
 consumer_key = CONFIG['consumer_key']
 consumer_secret = CONFIG['consumer_secret']
@@ -22,11 +24,13 @@ class TweetStreamListener(StreamListener):
             # print('Stopping stream..')
             return False
         try:
-            store_tpy_tweet_db(data)
-            # print('Uploaded data..')
+            msg_obj = format_tpy_dict(data)
+            msg_id = send_message(msg_str=msg_obj['body'], object_id=msg_obj['object_id'])
+            set_sqs_count()
+            print('Sent message to sqs with id: ', msg_id)
         except Exception as e:
             pass
-            # print(str(e))
+            # print('Exception in send message: ' + str(e))
             # set_stop_status()
             # return False
 

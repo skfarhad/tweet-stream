@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from fetch_utils import receive_message
 
 
 def handler(event, context):
-    # Your code goes here!
+    receive_message()
     return 'Fetch Finished!'

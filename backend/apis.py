@@ -1,8 +1,8 @@
 from flask_restful import Resource
 from flask import request
 from boto3.dynamodb.conditions import Key, Attr
-from app_apis.configs import FEED_TABLE, MANAGER_TABLE
-from app_apis.helpers import get_stream_status, set_run_status, set_stop_status, \
+from backend.configs import TWEET_TABLE, MANAGER_TABLE
+from backend.helpers import get_stream_status, set_run_status, set_stop_status, \
     get_json, fetch_recent_tweets, store_tweet_db
 
 
@@ -15,7 +15,7 @@ class TweetList(Resource):
     def get(self):
         token = request.args.get('token', 'a')
         count = request.args.get('count', 10)
-        response = FEED_TABLE.scan(
+        response = TWEET_TABLE.scan(
             FilterExpression=(
                 Attr('object_id').ne('None') &
                 Attr('text').contains(token)
