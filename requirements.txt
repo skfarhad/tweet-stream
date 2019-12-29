@@ -1,0 +1,7 @@
+python-twitter
+tweepy
+python-lambda
+zappa
+boto3
+flask
+flask-restful

@@ -1,0 +1,15 @@
+env/
+fetch_dist/
+stream_dist/
+.idea/
+*.sqlite3
+*.rdb
+*.tar.gz
+*.json
+*.bak
+*.pyc
+*.log
+*.pem
+*.csv
+*.yaml
+log/
