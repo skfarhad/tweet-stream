@@ -1,3 +1,4 @@
+import requests
 from flask_restful import Resource
 from flask import request
 from boto3.dynamodb.conditions import Key, Attr
@@ -37,6 +38,9 @@ class StreamStart(Resource):
             return {'msg': 'Tweet Stream is already Started!'}, 406
         token_list = list(filter(None, tokens.split(';')))
         set_run_status()
+        requests.get(
+            ''
+        )
         return {'msg': 'Tweet Stream Started!'}
 
 

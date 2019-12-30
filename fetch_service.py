@@ -1,7 +1,8 @@
-# -*- coding: utf-8 -*-
-from fetch_utils import receive_message
+from fetch_lib.helpers import process_record
 
 
 def handler(event, context):
-    receive_message()
-    return 'Fetch Finished!'
+    for record in event['Records']:
+        process_record(record)
+    print('Fetch Finished!')
+    return True
