@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 import pytz
 from urllib.parse import urlencode
 import json
@@ -25,7 +26,7 @@ def format_ptw_dict(dict_obj):
     dict_obj = get_json(dict_obj)
     new_dict = {}
     new_dict.update({
-        'object_id': dict_obj['id_str'],
+        'object_id': int(time.time()*1000),
         'created_at': dict_obj['created_at'],
         'text': dict_obj['text'],
         'body': json.dumps(dict_obj)
@@ -36,7 +37,6 @@ def format_ptw_dict(dict_obj):
 def get_stored_tweets(token='a', count=10):
     response = configs.TWEET_TABLE.scan(
         FilterExpression=(
-                Attr('object_id').ne('None') &
                 Attr('text').contains(token)
         ),
         Limit=int(count)
@@ -122,3 +122,22 @@ def set_stop_status():
             ':val2': cur_ts
         }
     )
+
+
+def storage_details():
+    count = configs.TWEET_TABLE.item_count
+    return {
+        'table': 'tweets',
+        'item_count': count
+    }
+
+
+def clean_storage():
+    scan = configs.TWEET_TABLE.scan()
+    with configs.TWEET_TABLE.batch_writer() as batch:
+        for each in scan['Items']:
+            batch.delete_item(
+                Key={
+                    'object_id': each['object_id']
+                }
+            )

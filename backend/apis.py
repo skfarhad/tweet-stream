@@ -23,14 +23,15 @@ class TweetList(Resource):
 
 class StreamStart(Resource):
     def get(self):
-        tokens = request.args.get('tokens', 'a;b')
-        count = request.args.get('count', 100)
         if helpers.get_stream_status():
             return {'msg': 'Tweet Stream is already Started!'}, 406
-        token_list = list(filter(None, tokens.split(';')))
+
+        token_list = request.args.get('token_list', 'a;b')
+        count = request.args.get('count', 100)
+        token_list = list(filter(None, token_list.split(';')))
         helpers.set_run_status()
         response = requests.get(
-            configs.STREAM_URL,
+            url=configs.STREAM_URL,
             params={
                 'token_list': token_list,
                 'count': count
@@ -62,4 +63,16 @@ class LiveTweets(Resource):
         count = request.args.get('count', 10)
         tweets = helpers.get_live_tweets(token=token, count=count)
         return {'tweet_count': len(tweets), 'tweets': tweets}
+
+
+class StorageDetails(Resource):
+    def get(self):
+        details = helpers.storage_details()
+        return {'details': details}
+
+
+class StorageDelete(Resource):
+    def get(self):
+        helpers.clean_storage()
+        return {'msg': 'Storage cleaned!'}
 

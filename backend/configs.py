@@ -6,7 +6,7 @@ import twitter
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DDB = boto3.resource('dynamodb')
-TWEET_TABLE = DDB.Table('twitter_feed')
+TWEET_TABLE = DDB.Table('tweets')
 MANAGER_TABLE = DDB.Table('stream_manager')
 SQS = boto3.client('sqs')
 STREAM_URL = 'https://fe2h7ne666.execute-api.us-west-2.amazonaws.com/default/tweet_streamer'

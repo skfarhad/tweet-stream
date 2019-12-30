@@ -54,7 +54,7 @@ def handler(event, context):
     token_list = event.get('token_list', 'a;b')
     token_list = list(filter(None, token_list.split(';')))
     count_limit = event.get('count', 100)
-    start_stream(token_list=token_list)
+    start_stream(token_list=token_list, count_limit=count_limit)
     msg = 'Stream Stopped!'
     print(msg)
     response = {

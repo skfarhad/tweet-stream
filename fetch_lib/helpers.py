@@ -1,4 +1,5 @@
 import json
+import time
 from boto3.dynamodb.conditions import Key
 from fetch_lib.configs import TWEET_TABLE, MANAGER_TABLE
 
@@ -7,7 +8,7 @@ def store_sqs_record_db(sqs_record):
     dict_obj = json.loads(sqs_record)
     new_dict = {}
     new_dict.update({
-        'object_id': dict_obj['id_str'],
+        'object_id': int(time.time()*1000),
         'created_at': dict_obj['created_at'],
         'text': dict_obj['text'],
         'body': json.dumps(dict_obj)

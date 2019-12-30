@@ -8,6 +8,8 @@ api = Api(app)
 api.add_resource(apis.Home, '/')
 api.add_resource(apis.TweetList, '/tweets')
 api.add_resource(apis.LiveTweets, '/tweets/live')
+api.add_resource(apis.StorageDelete, '/tweets/delete')
+api.add_resource(apis.StorageDetails, '/storage')
 
 api.add_resource(apis.StreamStart, '/stream/start')
 api.add_resource(apis.StreamStop, '/stream/stop')
