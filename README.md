@@ -25,10 +25,9 @@ It's handler is located in <code>stream_service.py</code> file.
 <code>fetch_service.py</code> file.
 <br>Those functions are implemented in Python.
 
-<br>AWS CloudWatch Event trigger is being used to trigger stream start service every 5 minutes.
-<br>The function checks if the stream status is active or not. 
-If active then it keeps fetching the tweets for 240 secs.
-<br>Then another event is triggered and stream keeps going that way.
+<br>Asynchronous API Gatway trigger is being used to trigger stream start service.
+<br>The function checks if the stream status is true or not. 
+<br>If true then it keeps fetching the tweets for 240 seconds which is set as timeout limit.
 
 <br>If the user sets the status to false then the stream is stopped.
 <br>The SQS event is used to trigger the function which store the tweets from SQS to DynamoDB. 
