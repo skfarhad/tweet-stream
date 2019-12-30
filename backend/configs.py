@@ -9,6 +9,7 @@ DDB = boto3.resource('dynamodb')
 TWEET_TABLE = DDB.Table('twitter_feed')
 MANAGER_TABLE = DDB.Table('stream_manager')
 SQS = boto3.client('sqs')
+STREAM_URL = 'https://fe2h7ne666.execute-api.us-west-2.amazonaws.com/default/tweet_streamer'
 
 with open(os.path.join(BASE_DIR, 'credentials.json')) as config_file:
     CONFIG = json.load(config_file)

@@ -1,6 +1,6 @@
 import json
 from boto3.dynamodb.conditions import Key
-from fetch_lib.configs import TWEET_TABLE
+from fetch_lib.configs import TWEET_TABLE, MANAGER_TABLE
 
 
 def store_sqs_record_db(sqs_record):
@@ -16,6 +16,8 @@ def store_sqs_record_db(sqs_record):
         Item=new_dict,
         ReturnValues='ALL_OLD'
     )
+    if not response:
+        set_insert_count()
     return response
 
 
@@ -27,5 +29,17 @@ def process_record(record):
         print('Stored message with id: ' + str(msg_id))
     except Exception as e:
         print('Exception in fetch: ' + str(e))
+
+
+def set_insert_count():
+    MANAGER_TABLE.update_item(
+        Key={
+            'manager_id': 1,
+        },
+        UpdateExpression='SET cur_insert_count = cur_insert_count + :val1,',
+        ExpressionAttributeValues={
+            ':val1': 1,
+        }
+    )
 
 

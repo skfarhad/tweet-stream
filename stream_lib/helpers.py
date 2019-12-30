@@ -30,19 +30,14 @@ def get_stream_status():
     return manager['stream_status']
 
 
-def set_run_status():
-    cur_ts = str(utc.localize(datetime.now()))
+def set_sqs_count():
     MANAGER_TABLE.update_item(
         Key={
             'manager_id': 1,
         },
-        UpdateExpression=('SET stream_status = :val1, '
-                          'ts_start = :val2, cur_sqs_count = :val3, cur_insert_count = :val4'),
+        UpdateExpression='SET cur_sqs_count = cur_sqs_count + :val1,',
         ExpressionAttributeValues={
-            ':val1': True,
-            ':val2': cur_ts,
-            ':val3': 0,
-            ':val4': 0
+            ':val1': 1,
         }
     )
 

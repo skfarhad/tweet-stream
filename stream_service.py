@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 
 from stream_lib.configs import CONFIG
 from stream_lib.helpers import get_stream_status, \
-    set_stop_status, format_tpy_dict
+    set_stop_status, format_tpy_dict, set_sqs_count
 from stream_lib.helpers import send_message
 
 consumer_key = CONFIG['consumer_key']
@@ -21,11 +19,12 @@ class TweetStreamListener(StreamListener):
         # TODO: Push to SQS
         if not get_stream_status():
             set_stop_status()
-            # print('Stopping stream..')
+            print('Stream Finished')
             return False
         try:
             msg_obj = format_tpy_dict(data)
             msg_id = send_message(msg_str=msg_obj['body'], object_id=msg_obj['object_id'])
+            set_sqs_count()
             print('Sent message to sqs with id: ', msg_id)
         except Exception as e:
             pass
@@ -41,7 +40,7 @@ class TweetStreamListener(StreamListener):
         return False
 
 
-def start_stream(token_list=None):
+def start_stream(token_list=None, count_limit=100):
     listener = TweetStreamListener()
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token_key, access_token_secret)
@@ -52,10 +51,14 @@ def start_stream(token_list=None):
 def handler(event, context):
     # Your code goes here!
     print('Invoked stream service!')
-    # token_list = event.get('token_list', ['python'])
-    # count_limit = event.get('count', 100)
-    token_list = ['python', 'metoo']
+    token_list = event.get('token_list', 'a;b')
+    token_list = list(filter(None, token_list.split(';')))
+    count_limit = event.get('count', 100)
     start_stream(token_list=token_list)
-    msg = 'Stream Finished!'
+    msg = 'Stream Stopped!'
     print(msg)
-    return True
+    response = {
+        "statusCode": 200,
+        "body": msg
+    }
+    return response

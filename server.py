@@ -7,11 +7,11 @@ api = Api(app)
 
 api.add_resource(apis.Home, '/')
 api.add_resource(apis.TweetList, '/tweets')
-api.add_resource(apis.FetchNewTweets, '/tweets/live')
+api.add_resource(apis.LiveTweets, '/tweets/live')
 
 api.add_resource(apis.StreamStart, '/stream/start')
 api.add_resource(apis.StreamStop, '/stream/stop')
-api.add_resource(apis.StreamStatusDetails, '/stream/status')
+api.add_resource(apis.StreamConfigs, '/stream/status')
 
 
 if __name__ == '__main__':
